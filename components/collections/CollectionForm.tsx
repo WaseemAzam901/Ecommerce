@@ -16,22 +16,25 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { Textarea } from "@/components/ui/textarea"
+import { Textarea } from "@/components/ui/textarea";
 
 import { Separator } from "../ui/separator";
+import ImageUpload from "../custom_ui/ImageUpload";
 
 const CollectionForm = () => {
   const formSchema = z.object({
-    Title: z.string().min(2).max(50),
-    Description: z.string().max(50),
+    title: z.string().min(2).max(50),
+    description: z.string().max(50),
+    image: z.string(),
   });
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      Title: "",
-      Description: "",
+      title: "",
+      description: "",
+      image: "",
     },
   });
 
@@ -50,7 +53,7 @@ const CollectionForm = () => {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="Title"
+            name="title"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Title</FormLabel>
@@ -62,14 +65,33 @@ const CollectionForm = () => {
             )}
           />
 
-<FormField
+          <FormField
             control={form.control}
-            name="Title"
+            name="description"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Description</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Description" {...field} rows={5}/>
+                  <Textarea placeholder="Description" {...field} rows={5} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+
+<FormField
+            control={form.control}
+            name="image"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Image</FormLabel>
+                <FormControl>
+                  <ImageUpload
+                    value={field.value ? [field.value] : []}
+                    onChange={(url) => field.onChange(url)}
+                    onRemove={() => field.onChange("")}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
